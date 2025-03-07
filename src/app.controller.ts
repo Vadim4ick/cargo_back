@@ -13,14 +13,10 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
-import { LocalAuthGuard } from './auth/local-auth.guard';
+import { LocalAuthGuard } from './auth/guards/local-auth.guard';
 import { AuthService } from './auth/auth.service';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
-
-class AuthDto {
-  email: string;
-  password: string;
-}
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { CreateUserDto, UserDto } from './users/dto/user.dto';
 
 @ApiTags('Authentication')
 @Controller()
@@ -29,7 +25,7 @@ export class AppController {
 
   @ApiOperation({ summary: 'Авторизация пользователя' })
   @ApiBody({
-    type: AuthDto,
+    type: UserDto,
     description: 'Данные для входа',
     examples: {
       user1: {
@@ -56,7 +52,7 @@ export class AppController {
 
   @ApiOperation({ summary: 'Регистрация' })
   @ApiBody({
-    type: AuthDto,
+    type: UserDto,
     description: 'Данные для регистрации',
     examples: {
       user1: {
@@ -70,7 +66,7 @@ export class AppController {
     },
   })
   @Post('register')
-  async register(@Body() body: AuthDto) {
+  async register(@Body() body: CreateUserDto) {
     return this.authService.register(body.email, body.password);
   }
 
