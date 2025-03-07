@@ -1,10 +1,14 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import * as bcrypt from 'bcrypt';
+import { InvitationService } from 'src/invitation/invitation.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private invitationService: InvitationService,
+  ) {}
 
   async findOne(email: string) {
     return this.prisma.user.findUnique({
@@ -12,18 +16,21 @@ export class UsersService {
     });
   }
 
-  async create(email: string, password: string) {
-    if (await this.findOne(email)) {
-      throw new HttpException('Пользователь существует', 400);
+  async create(email: string, password: string, inviteToken: string) {
+    const invite = await this.invitationService.validateInvite(inviteToken);
+
+    if (invite.email !== email) {
+      throw new HttpException('Неверное приглашение', HttpStatus.BAD_REQUEST);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    return this.prisma.user.create({
-      data: {
-        email: email,
-        password: hashedPassword,
-      },
+    const user = await this.prisma.user.create({
+      data: { email, password: hashedPassword },
     });
+
+    await this.invitationService.markInviteUsed(inviteToken);
+
+    return { message: 'Регистрация успешна', user };
   }
 }

@@ -30,7 +30,7 @@ export class AuthService {
     };
   }
 
-  async register(email: string, password: string) {
-    return this.usersService.create(email, password);
+  async register(email: string, password: string, inviteToken: string) {
+    return this.usersService.create(email, password, inviteToken);
   }
 }

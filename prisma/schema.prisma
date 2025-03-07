@@ -14,3 +14,11 @@ model User {
   password  String
   createdAt DateTime @default(now())
 }
+
+model Invitation {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  token     String   @unique
+  createdAt DateTime @default(now())
+  used      Boolean  @default(false)
+}

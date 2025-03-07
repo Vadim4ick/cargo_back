@@ -75,6 +75,7 @@ export class AuthController {
         value: {
           email: 'firulvv@mail.ru',
           password: '123456',
+          inviteToken: '123e4567-e89b-12d3-a456-426614174000',
         },
       },
     },
@@ -91,7 +92,11 @@ export class AuthController {
   })
   @Post('/auth/register')
   async register(@Body() body: CreateUserDto) {
-    return this.authService.register(body.email, body.password);
+    return this.authService.register(
+      body.email,
+      body.password,
+      body.inviteToken,
+    );
   }
 
   @ApiOperation({ summary: 'Получение профиля пользователя' })

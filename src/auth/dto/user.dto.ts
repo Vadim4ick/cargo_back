@@ -8,6 +8,10 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Пароль не может быть пустым' })
   @MinLength(6, { message: 'Пароль должен быть не менее 6 символов' })
   password: string;
+
+  @IsNotEmpty({ message: 'Токен' })
+  @MinLength(6, { message: 'Неверный токен' })
+  inviteToken: string;
 }
 
 export class UserDto {
