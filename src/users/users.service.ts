@@ -14,7 +14,7 @@ export class UsersService {
 
   async create(email: string, password: string) {
     if (await this.findOne(email)) {
-      throw new HttpException('User already exists', 400);
+      throw new HttpException('Пользователь существует', 400);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
