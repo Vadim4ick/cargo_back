@@ -1,0 +1,15 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:14.8-alpine3.18
+    environment:
+      POSTGRES_DB: 'cargo'
+      POSTGRES_USER: 'cargo'
+      POSTGRES_PASSWORD: 'cargo'
+    volumes:
+      - habrdb-data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+volumes:
+  habrdb-data:
