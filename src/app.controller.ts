@@ -1,4 +1,11 @@
-import { Controller, Request, Post, UseGuards, Get } from '@nestjs/common';
+import {
+  Controller,
+  Request,
+  Post,
+  UseGuards,
+  Get,
+  Body,
+} from '@nestjs/common';
 import {
   ApiTags,
   ApiOperation,
@@ -10,8 +17,8 @@ import { LocalAuthGuard } from './auth/local-auth.guard';
 import { AuthService } from './auth/auth.service';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
-class LoginDto {
-  username: string;
+class AuthDto {
+  email: string;
   password: string;
 }
 
@@ -22,14 +29,14 @@ export class AppController {
 
   @ApiOperation({ summary: 'Авторизация пользователя' })
   @ApiBody({
-    type: LoginDto,
+    type: AuthDto,
     description: 'Данные для входа',
     examples: {
       user1: {
         summary: 'Пример 1 (John)',
         description: 'Авторизация пользователя John',
         value: {
-          username: 'john',
+          email: 'john',
           password: 'changeme',
         },
       },
@@ -45,6 +52,26 @@ export class AppController {
   @Post('auth/login')
   async login(@Request() req) {
     return this.authService.login(req.user);
+  }
+
+  @ApiOperation({ summary: 'Регистрация' })
+  @ApiBody({
+    type: AuthDto,
+    description: 'Данные для регистрации',
+    examples: {
+      user1: {
+        summary: 'Пример',
+        description: 'Регистрация пользователя John',
+        value: {
+          email: 'Vadim',
+          password: 'changeme',
+        },
+      },
+    },
+  })
+  @Post('register')
+  async register(@Body() body: AuthDto) {
+    return this.authService.register(body.email, body.password);
   }
 
   @ApiOperation({ summary: 'Получение профиля пользователя' })
