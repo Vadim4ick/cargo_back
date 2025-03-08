@@ -1,10 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { randomUUID } from 'crypto';
+import { MailerService } from 'src/mail/mail.service';
 
 @Injectable()
 export class InvitationService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private mailerService: MailerService,
+  ) {}
 
   async generateInvite(email: string) {
     const existingInvite = await this.prisma.invitation.findUnique({
@@ -33,11 +37,14 @@ export class InvitationService {
       });
     }
 
+    const inviteLink = `http://localhost:3000/auth/register?token=${token}`;
+
+    // Отправляем письмо с приглашением
+    await this.mailerService.sendInvitation(email, inviteLink);
+
     return {
-      inviteLink: `${process.env.CLIENT_URI}/auth/register?token=${token}`,
-      message: existingInvite
-        ? 'Приглашение обновлено'
-        : 'Новое приглашение создано',
+      inviteLink,
+      message: 'Новое приглашение создано и отправлено на почту',
     };
   }
 

@@ -4,6 +4,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { InvitationModule } from './invitation/invitation.module';
 import { CargoModule } from './cargo/cargo.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { CargoModule } from './cargo/cargo.module';
     }),
     InvitationModule,
     CargoModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],
