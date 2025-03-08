@@ -29,3 +29,13 @@ enum Role {
   EDITOR
   SUPERADMIN
 }
+
+model Cargo {
+  id                 String   @id @default(uuid())
+  cargoNumber        String   @unique
+  date               DateTime
+  transportationInfo String
+  payoutAmount       Decimal
+  payoutTerms        String
+  createdAt          DateTime @default(now())
+}
