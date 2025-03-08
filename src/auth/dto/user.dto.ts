@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Role } from '@prisma/client';
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
 
 export class CreateUserDto {
@@ -20,6 +21,9 @@ export class UserDto {
 
   @ApiProperty({ example: 'john@example.com' })
   email: string;
+
+  @ApiProperty({ example: Role.USER })
+  role: Role;
 
   @ApiProperty({ example: '2022-01-01T00:00:00.000Z' })
   createdAt: Date;

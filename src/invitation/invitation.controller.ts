@@ -16,6 +16,8 @@ import {
 import { UserDto } from 'src/auth/dto/user.dto';
 import { UsersService } from 'src/users/users.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Controller('invitation')
 export class InvitationController {
@@ -55,8 +57,9 @@ export class InvitationController {
       statusCode: 401,
     },
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @ApiBearerAuth('access-token')
+  @Roles('SUPERADMIN')
   @Post('invite')
   async generateInvite(@Body('email') email: string) {
     const user = await this.usersService.findOne(email);

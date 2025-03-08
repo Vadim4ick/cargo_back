@@ -99,6 +99,33 @@ export class AuthController {
     );
   }
 
+  @ApiOperation({ summary: 'Обновление access token с помощью refresh token' })
+  @ApiBody({
+    description: 'Refresh token для обновления access token',
+    schema: {
+      example: {
+        refreshToken: 'ваш_refresh_token',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Новый access token',
+    schema: {
+      example: {
+        access_token: 'новый_access_token',
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Неверный или просроченный refresh token',
+  })
+  @Post('/auth/refresh')
+  async refresh(@Body('refreshToken') refreshToken: string) {
+    return this.authService.refresh(refreshToken);
+  }
+
   @ApiOperation({ summary: 'Получение профиля пользователя' })
   @ApiBearerAuth('access-token')
   @ApiResponse({
@@ -119,6 +146,6 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@Request() req) {
-    return req.user;
+    return this.authService.getProfile(req.user.email);
   }
 }

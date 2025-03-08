@@ -12,6 +12,7 @@ model User {
   email     String   @unique
   username  String?
   password  String
+  role      Role     @default(USER)
   createdAt DateTime @default(now())
 }
 
@@ -21,4 +22,10 @@ model Invitation {
   token     String   @unique
   createdAt DateTime @default(now())
   used      Boolean  @default(false)
+}
+
+enum Role {
+  USER
+  EDITOR
+  SUPERADMIN
 }
