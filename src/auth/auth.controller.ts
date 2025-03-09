@@ -5,6 +5,9 @@ import {
   UseGuards,
   Get,
   Body,
+  Res,
+  Req,
+  UnauthorizedException,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -17,6 +20,7 @@ import { AuthService } from './auth.service';
 import { CreateUserDto, UserDto } from 'src/auth/dto/user.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { Request as ExpressRequest, Response } from 'express';
 
 @ApiTags('Authentication')
 @Controller()
@@ -43,7 +47,10 @@ export class AuthController {
     description: 'Успешная авторизация',
     schema: {
       example: {
-        access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+        message: 'Успешная авторизация',
+        data: {
+          access_token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
+        },
       },
     },
   })
@@ -60,8 +67,24 @@ export class AuthController {
   })
   @UseGuards(LocalAuthGuard)
   @Post('/auth/login')
-  async login(@Request() req) {
-    return this.authService.login(req.user);
+  async login(@Request() req, @Res({ passthrough: true }) res: Response) {
+    const { refresh_token, access_token } = await this.authService.login(
+      req.user,
+    );
+
+    res.cookie('refresh_token', refresh_token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
+    });
+
+    return {
+      data: {
+        access_token,
+      },
+      message: 'Успешная авторизация',
+    };
   }
 
   @ApiOperation({ summary: 'Регистрация' })
@@ -104,7 +127,7 @@ export class AuthController {
     description: 'Refresh token для обновления access token',
     schema: {
       example: {
-        refreshToken: 'ваш_refresh_token',
+        refresh_token: 'ваш_refresh_token',
       },
     },
   })
@@ -122,8 +145,33 @@ export class AuthController {
     description: 'Неверный или просроченный refresh token',
   })
   @Post('/auth/refresh')
-  async refresh(@Body('refreshToken') refreshToken: string) {
+  async refresh(@Req() req: ExpressRequest) {
+    const refreshToken =
+      req.cookies['refresh_token'] ?? req.headers['cookie'].split(' ')[1];
+
+    if (!refreshToken) {
+      throw new UnauthorizedException('Рефреш токен отсутствует');
+    }
+
     return this.authService.refresh(refreshToken);
+  }
+
+  @ApiOperation({ summary: 'Выход пользователя и удаление токенов' })
+  @ApiResponse({
+    status: 200,
+    description: 'Успешный выход',
+    schema: {
+      example: { message: 'Вы успешно вышли' },
+    },
+  })
+  @Post('/auth/logout')
+  async logout(
+    @Req() req: ExpressRequest,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    res.clearCookie('refresh_token', { domain: 'localhost', path: '/' });
+
+    return { message: 'Вы успешно вышли' };
   }
 
   @ApiOperation({ summary: 'Получение профиля пользователя' })

@@ -34,10 +34,12 @@ export class AuthService {
       const newAccessToken = this.jwtService.sign(
         { id: payload.id, email: payload.email, role: payload.role },
         {
-          expiresIn: '15m', // например, новый access token действителен 15 минут
+          expiresIn: '5m', // например, новый access token действителен 15 минут
         },
       );
-      return { access_token: newAccessToken };
+      return {
+        access_token: newAccessToken,
+      };
     } catch (err) {
       throw new UnauthorizedException(
         'Неверный или просроченный refresh token',
