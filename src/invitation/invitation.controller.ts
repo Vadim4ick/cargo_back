@@ -45,8 +45,7 @@ export class InvitationController {
     status: 200,
     description: 'Приглашение успешно отправлено',
     example: {
-      inviteLink:
-        'http://localhost:3000/auth/register?token=5c2f489d-e2ff-4ad0-8ac0-662e220a8609',
+      inviteLink: `${process.env.CLIENT_URI}/register?token=5c2f489d-e2ff-4ad0-8ac0-662e220a8609`,
       message: 'Новое приглашение создано',
     },
   })

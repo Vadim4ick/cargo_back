@@ -13,6 +13,9 @@ export class CreateUserDto {
   @IsNotEmpty({ message: 'Токен' })
   @MinLength(6, { message: 'Неверный токен' })
   inviteToken: string;
+
+  @ApiProperty({ example: 'Vadim' })
+  username?: string;
 }
 
 export class UserDto {

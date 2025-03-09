@@ -20,7 +20,7 @@ export class InvitationService {
 
     if (existingInvite && !existingInvite.used) {
       return {
-        inviteLink: `${process.env.CLIENT_URI}/auth/register?token=${existingInvite.token}`,
+        inviteLink: `${process.env.CLIENT_URI}/register?token=${existingInvite.token}`,
         message: 'Приглашение уже было создано ранее',
       };
     }
@@ -40,7 +40,7 @@ export class InvitationService {
       });
     }
 
-    const inviteLink = `http://localhost:3000/auth/register?token=${token}`;
+    const inviteLink = `http://localhost:3000/register?token=${token}`;
 
     // Отправляем письмо с приглашением
     await this.mailerService.sendInvitation(email, inviteLink);

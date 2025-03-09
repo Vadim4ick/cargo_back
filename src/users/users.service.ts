@@ -48,7 +48,7 @@ export class UsersService {
       throw new HttpException('Пользователь не найден', HttpStatus.NOT_FOUND);
     }
 
-    const deletedUser = this.prisma.user.delete({ where: { id } });
+    const deletedUser = await this.prisma.user.delete({ where: { id } });
 
     return {
       message: 'Пользователь удален',
@@ -58,7 +58,12 @@ export class UsersService {
     };
   }
 
-  async create(email: string, password: string, inviteToken: string) {
+  async create(
+    email: string,
+    password: string,
+    inviteToken: string,
+    username: string,
+  ) {
     const invite = await this.invitationService.validateInvite(inviteToken);
 
     if (invite.email !== email) {
@@ -68,7 +73,7 @@ export class UsersService {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const user = await this.prisma.user.create({
-      data: { email, password: hashedPassword },
+      data: { email, password: hashedPassword, username },
     });
 
     await this.invitationService.markInviteUsed(inviteToken);

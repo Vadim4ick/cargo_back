@@ -119,6 +119,7 @@ export class AuthController {
       body.email,
       body.password,
       body.inviteToken,
+      body.username,
     );
   }
 
