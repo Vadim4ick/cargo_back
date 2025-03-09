@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Role } from '@prisma/client';
-import { IsEmail, IsNotEmpty, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, MinLength } from 'class-validator';
 
 export class CreateUserDto {
   @IsEmail({}, { message: 'Емайл не валиден' })
@@ -29,5 +29,22 @@ export class UserDto {
   createdAt: Date;
 
   @ApiProperty({ example: 'Vadim' })
+  username?: string;
+}
+
+export class EditUserDto {
+  @ApiProperty({
+    example: 'john@example.com',
+    description: 'Email пользователя',
+  })
+  @IsNotEmpty({ message: 'Email не должен быть пустым' })
+  @IsEmail({}, { message: 'Неверный формат email' })
+  email: string;
+
+  @ApiProperty({ example: Role.USER, description: 'Роль пользователя' })
+  @IsEnum(Role, { message: 'Недопустимое значение роли' })
+  role: Role;
+
+  @ApiProperty({ example: 'Vadim', description: 'Имя пользователя' })
   username?: string;
 }

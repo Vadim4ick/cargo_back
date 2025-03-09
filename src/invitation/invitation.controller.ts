@@ -18,6 +18,7 @@ import { UsersService } from 'src/users/users.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/auth/decorators/roles.decorator';
+import { InvitationDto } from './dto/invitation.dto';
 
 @Controller('invitation')
 export class InvitationController {
@@ -61,8 +62,8 @@ export class InvitationController {
   @ApiBearerAuth('access-token')
   @Roles('SUPERADMIN')
   @Post('invite')
-  async generateInvite(@Body('email') email: string) {
-    const user = await this.usersService.findOne(email);
+  async generateInvite(@Body() invitationDto: InvitationDto) {
+    const user = await this.usersService.findOne(invitationDto.email);
 
     if (user) {
       throw new HttpException(
@@ -71,6 +72,6 @@ export class InvitationController {
       );
     }
 
-    return this.invitationService.generateInvite(email);
+    return this.invitationService.generateInvite(invitationDto);
   }
 }

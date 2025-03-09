@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { randomUUID } from 'crypto';
 import { MailerService } from 'src/mail/mail.service';
+import { InvitationDto } from './dto/invitation.dto';
 
 @Injectable()
 export class InvitationService {
@@ -10,7 +11,9 @@ export class InvitationService {
     private mailerService: MailerService,
   ) {}
 
-  async generateInvite(email: string) {
+  async generateInvite(invitationDto: InvitationDto) {
+    const { email } = invitationDto;
+
     const existingInvite = await this.prisma.invitation.findUnique({
       where: { email },
     });
