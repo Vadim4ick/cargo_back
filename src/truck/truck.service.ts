@@ -6,6 +6,10 @@ export class TruckService {
   constructor(private prisma: PrismaService) {}
 
   findAll() {
-    return this.prisma.truck.findMany();
+    return this.prisma.truck.findMany({
+      include: {
+        cargos: true,
+      },
+    });
   }
 }
