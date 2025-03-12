@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { InvitationModule } from './invitation/invitation.module';
 import { CargoModule } from './cargo/cargo.module';
 import { MailModule } from './mail/mail.module';
+import { TruckModule } from './truck/truck.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { MailModule } from './mail/mail.module';
     InvitationModule,
     CargoModule,
     MailModule,
+    TruckModule,
   ],
   controllers: [],
   providers: [],

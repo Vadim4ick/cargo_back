@@ -20,4 +20,8 @@ export class CreateCargoDto {
   @IsNotEmpty({ message: 'Сроки выплаты не могут быть пустыми' })
   @IsString({ message: 'Сроки выплаты должны быть строкой' })
   payoutTerms: string;
+
+  @IsNotEmpty({ message: 'ID машины не может быть пустым' })
+  @IsString({ message: 'ID машины не может быть пустым' })
+  truckId: string;
 }

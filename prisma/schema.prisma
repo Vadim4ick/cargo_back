@@ -38,4 +38,14 @@ model Cargo {
   payoutAmount       Decimal
   payoutTerms        String
   createdAt          DateTime @default(now())
+
+  truckId String
+  truck   Truck  @relation(fields: [truckId], references: [id])
+}
+
+model Truck {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  cargos    Cargo[]
+  createdAt DateTime @default(now())
 }

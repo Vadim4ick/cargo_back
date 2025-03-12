@@ -9,7 +9,10 @@ export class CargoService {
 
   create(createCargoDto: CreateCargoDto) {
     return this.prisma.cargo.create({
-      data: createCargoDto,
+      data: {
+        ...createCargoDto,
+      },
+      include: { truck: true },
     });
   }
 
