@@ -3,9 +3,11 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import * as cookieParser from 'cookie-parser';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   // Настройка Swagger
   const config = new DocumentBuilder()
@@ -28,6 +30,9 @@ async function bootstrap() {
     origin: [process.env.CLIENT_URI || 'http://localhost:3000'],
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     credentials: true,
+  });
+  app.useStaticAssets(join(process.cwd(), 'images'), {
+    prefix: '/images',
   });
 
   const document = SwaggerModule.createDocument(app, config);

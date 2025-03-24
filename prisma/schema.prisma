@@ -41,11 +41,21 @@ model Cargo {
 
   truckId String
   truck   Truck  @relation(fields: [truckId], references: [id])
+
+  cargoPhoto CargoPhoto?
 }
 
 model Truck {
   id        String   @id @default(uuid())
   name      String   @unique
   cargos    Cargo[]
+  createdAt DateTime @default(now())
+}
+
+model CargoPhoto {
+  id        String   @id @default(uuid())
+  url       String   @unique // URL изображения
+  cargo     Cargo    @relation(fields: [cargoId], references: [id], onDelete: Cascade)
+  cargoId   String   @unique
   createdAt DateTime @default(now())
 }

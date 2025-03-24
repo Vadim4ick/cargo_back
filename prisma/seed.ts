@@ -24,10 +24,12 @@ async function main() {
   // Добавляем 4 машины
   await prisma.truck.createMany({
     data: [
-      { name: 'Scania R500' },
-      { name: 'Volvo FH16' },
-      { name: 'Mercedes Actros' },
-      { name: 'DAF XF105' },
+      { name: 'Sitrak 183' },
+      { name: 'Sitrak 911' },
+      { name: 'Sitrak 254' },
+      { name: 'HOWO 174' },
+      { name: 'HOWO 661' },
+      { name: 'Газон' },
     ],
     skipDuplicates: true,
   });

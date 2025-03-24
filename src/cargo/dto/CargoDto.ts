@@ -38,6 +38,13 @@ export class CargoDto {
   payoutTerms: string;
 
   @ApiProperty({
+    example: 'https://your-storage.com/uploads/cargo123.jpg',
+    description: 'URL фотографии груза',
+    required: false,
+  })
+  cargoPhotoUrl?: string; // Поле может быть `undefined`, если фото нет
+
+  @ApiProperty({
     example: '2025-03-08T12:34:56.789Z',
     description: 'Дата создания записи',
   })
