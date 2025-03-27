@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { IsInt, IsOptional, Min } from 'class-validator';
 
 export class CargoDto {
   @ApiProperty({
@@ -49,4 +51,29 @@ export class CargoDto {
     description: 'Дата создания записи',
   })
   createdAt: Date;
+}
+
+export class GetCargosDto {
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  page = 0;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  limit = 10;
+}
+
+export class CargoPaginatedDto {
+  @ApiProperty({ type: [CargoDto], description: 'Список грузов' })
+  data: CargoDto[];
+
+  @ApiProperty({ example: 123, description: 'Общее количество записей' })
+  total: number;
+
+  @ApiProperty({ example: 13, description: 'Общее количество страниц' })
+  pageCount: number;
 }

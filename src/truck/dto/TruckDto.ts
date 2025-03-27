@@ -1,5 +1,4 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Cargo } from '@prisma/client';
 
 export class TruckDto {
   @ApiProperty({
@@ -13,10 +12,4 @@ export class TruckDto {
     description: 'Номер груза',
   })
   name: string;
-
-  @ApiProperty({
-    example: [],
-    description: 'Грузы',
-  })
-  cargos: Cargo[];
 }
