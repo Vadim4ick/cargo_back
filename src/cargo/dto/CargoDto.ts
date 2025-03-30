@@ -1,56 +1,98 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsInt, IsOptional, Min } from 'class-validator';
+import {
+  IsOptional,
+  IsString,
+  IsNumber,
+  IsDateString,
+  IsUUID,
+  IsInt,
+  Min,
+} from 'class-validator';
 
 export class CargoDto {
   @ApiProperty({
     example: 'a1b2c3d4-e5f6-7890-1234-56789abcdef0',
     description: 'Уникальный идентификатор груза',
   })
+  @IsUUID()
   id: string;
-
-  @ApiProperty({
-    example: 'GR-20250308-001',
-    description: 'Номер груза',
-  })
-  cargoNumber: string;
-
-  @ApiProperty({
-    example: '2025-03-08T00:00:00.000Z',
-    description: 'Дата груза',
-  })
-  date: Date;
-
-  @ApiProperty({
-    example: 'Перевозка автотранспортом из Москвы в Санкт-Петербург',
-    description: 'Информация о перевозке',
-  })
-  transportationInfo: string;
-
-  @ApiProperty({
-    example: 1500.75,
-    description: 'Сумма выплаты',
-  })
-  payoutAmount: number;
-
-  @ApiProperty({
-    example: 'В течение 30 дней после доставки',
-    description: 'Сроки выплаты',
-  })
-  payoutTerms: string;
-
-  @ApiProperty({
-    example: 'https://your-storage.com/uploads/cargo123.jpg',
-    description: 'URL фотографии груза',
-    required: false,
-  })
-  cargoPhotoUrl?: string; // Поле может быть `undefined`, если фото нет
 
   @ApiProperty({
     example: '2025-03-08T12:34:56.789Z',
     description: 'Дата создания записи',
   })
-  createdAt: Date;
+  @IsDateString()
+  createdAt: string;
+
+  @ApiProperty({
+    example: '2025-03-08T00:00:00.000Z',
+    description: 'Дата заявки',
+  })
+  @IsDateString()
+  date: string;
+
+  @ApiProperty({
+    example: 'GR-20250308-001',
+    description: 'Номер груза или заявки',
+  })
+  @IsString()
+  cargoNumber: string;
+
+  @ApiProperty({
+    example: '2025-03-09T09:00:00.000Z',
+    description: 'Дата загрузки/выгрузки',
+  })
+  @IsDateString()
+  loadUnloadDate: string;
+
+  @ApiProperty({
+    example: 'Иванов Иван Иванович',
+    description: 'ФИО или идентификатор водителя',
+  })
+  @IsString()
+  driver: string;
+
+  @ApiProperty({
+    example: 'Перевозка автотранспортом из Москвы в Санкт-Петербург',
+    description: 'Подробная информация о грузе',
+  })
+  @IsString()
+  transportationInfo: string;
+
+  @ApiProperty({
+    example: 1500.75,
+    description: 'Сумма выплат',
+  })
+  @IsNumber()
+  payoutAmount: number;
+
+  @ApiProperty({
+    example: '2025-03-20T00:00:00.000Z',
+    description: 'Дата оплаты',
+  })
+  @IsDateString()
+  payoutDate: string;
+
+  @ApiProperty({
+    example: 'Ожидается',
+    description:
+      'Статус оплаты (например, "Оплачено", "Ожидается", "Просрочено")',
+  })
+  @IsString()
+  paymentStatus: string;
+
+  // @ApiProperty({
+  //   description: 'Ссылки на документы (файлы/картинки)',
+  //   type: [String],
+  //   example: [
+  //     'https://example.com/documents/act.pdf',
+  //     'https://example.com/documents/photo.jpg',
+  //   ],
+  //   required: false,
+  // })
+  // @IsOptional()
+  // cargoPhotos?: string[];
 }
 
 export class GetCargosDto {

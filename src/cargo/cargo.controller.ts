@@ -8,7 +8,6 @@ import {
   Delete,
   UseGuards,
   UseInterceptors,
-  UploadedFile,
 } from '@nestjs/common';
 import { CargoService } from './cargo.service';
 import { CreateCargoDto } from './dto/create-cargo.dto';
@@ -50,28 +49,7 @@ export class CargoController {
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     description: 'Данные для создания нового груза',
-    schema: {
-      type: 'object',
-      properties: {
-        cargoNumber: { type: 'string', example: 'GR-20250308-001' },
-        date: { type: 'string', example: '2025-03-08T00:00:00.000Z' },
-        transportationInfo: {
-          type: 'string',
-          example: 'Перевозка автотранспортом из Москвы в Санкт-Петербург',
-        },
-        payoutAmount: { type: 'number', example: 1500.75 },
-        payoutTerms: {
-          type: 'string',
-          example: 'В течение 30 дней после доставки',
-        },
-        truckId: { type: 'string', example: 'truck-uuid-12345' },
-        cargoPhoto: {
-          type: 'string',
-          format: 'binary',
-          example: 'Файл изображения',
-        },
-      },
-    },
+    type: [CreateCargoDto],
   })
   @UseGuards(JwtAuthGuard)
   @Roles('SUPERADMIN', 'EDITOR')
@@ -79,9 +57,9 @@ export class CargoController {
   @UseInterceptors(FileInterceptor('cargoPhoto', storageConfig))
   create(
     @Body() createCargoDto: CreateCargoDto,
-    @UploadedFile() cargoPhoto?: Express.Multer.File,
+    // @UploadedFile() cargoPhoto?: Express.Multer.File,
   ) {
-    return this.cargoService.create(createCargoDto, cargoPhoto);
+    return this.cargoService.create(createCargoDto);
   }
 
   @ApiOperation({ summary: 'Получение списка грузов' })
@@ -181,9 +159,9 @@ export class CargoController {
   update(
     @Param('id') id: string,
     @Body() updateCargoDto: UpdateCargoDto,
-    @UploadedFile() cargoPhoto?: Express.Multer.File,
+    // @UploadedFile() cargoPhoto?: Express.Multer.File,
   ) {
-    return this.cargoService.update(id, updateCargoDto, cargoPhoto);
+    return this.cargoService.update(id, updateCargoDto);
   }
 
   @ApiOperation({ summary: 'Удаление груза по ID' })

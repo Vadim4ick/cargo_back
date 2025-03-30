@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-
 import * as bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -13,6 +12,7 @@ async function main() {
       "User",
       "Truck",
       "Cargo",
+      "CargoPhoto",
       "Invitation"
     RESTART IDENTITY CASCADE;
   `);
@@ -21,7 +21,7 @@ async function main() {
 
   console.log('🚛 Начинаем сидинг данных...');
 
-  // Добавляем 4 машины
+  // Добавляем 6 машин
   await prisma.truck.createMany({
     data: [
       { name: 'Sitrak 183' },
@@ -39,45 +39,77 @@ async function main() {
   // Получаем машины из БД для связи с грузами
   const truckList = await prisma.truck.findMany();
 
-  // Добавляем грузы и связываем их с машинами
-  await prisma.cargo.createMany({
-    data: [
-      {
-        cargoNumber: 'CARGO-1001',
-        date: new Date(),
-        transportationInfo: 'Перевозка электроники',
-        payoutAmount: 5000.75,
-        payoutTerms: '50% предоплата',
-        truckId: truckList[0].id,
-      },
-      {
-        cargoNumber: 'CARGO-1002',
-        date: new Date(),
-        transportationInfo: 'Перевозка мебели',
-        payoutAmount: 3200.5,
-        payoutTerms: 'Оплата после доставки',
-        truckId: truckList[1].id,
-      },
-      {
-        cargoNumber: 'CARGO-1003',
-        date: new Date(),
-        transportationInfo: 'Продукты питания',
-        payoutAmount: 2000.0,
-        payoutTerms: '100% предоплата',
-        truckId: truckList[2].id,
-      },
-      {
-        cargoNumber: 'CARGO-1004',
-        date: new Date(),
-        transportationInfo: 'Строительные материалы',
-        payoutAmount: 7500.25,
-        payoutTerms: 'Оплата через 14 дней',
-        truckId: truckList[3].id,
-      },
-    ],
-  });
+  // Для каждой машины создаём по 3 груза
+  for (const truck of truckList) {
+    await prisma.cargo.createMany({
+      data: [
+        {
+          date: '14.03.2025',
+          cargoNumber: `CARGO-${truck.name}-1`,
+          loadUnloadDate: '16.03.2025',
+          driver: 'Иванов Иван',
+          transportationInfo: 'Описание груза',
+          payoutAmount: 1500,
+          payoutDate: '20.03.2025',
+          paymentStatus: 'Оплачено',
+          payoutTerms: 'Предоплата',
+          truckId: truck.id,
+        },
+        {
+          date: '10.02.2025',
+          cargoNumber: `CARGO-${truck.name}-3`,
+          loadUnloadDate: '10.03.2025',
+          driver: 'Иванов Иван',
+          transportationInfo: 'Описание груза',
+          payoutAmount: 2500,
+          payoutDate: '25.03.2025',
+          paymentStatus: 'Оплачено',
+          payoutTerms: 'Предоплата',
+          truckId: truck.id,
+        },
+        {
+          date: '01.01.2025',
+          cargoNumber: `CARGO-${truck.name}-2`,
+          loadUnloadDate: '05.02.2025',
+          driver: 'Иванов Иван',
+          transportationInfo: 'Описание груза',
+          payoutAmount: 3500,
+          payoutDate: '15.02.2025',
+          paymentStatus: 'Оплачено',
+          payoutTerms: 'Предоплата',
+          truckId: truck.id,
+        },
+      ],
+    });
+  }
 
-  console.log('✅ Добавлены грузы');
+  console.log('✅ Добавлено по 3 груза к каждой машине');
+
+  // [Необязательно] Пример добавления фотографий (CargoPhoto) к первому грузу каждой машины
+  // Если нужно продемонстрировать добавление фото, можно сделать так:
+  // for (const truck of truckList) {
+  //   // Находим первый груз у конкретной машины
+  //   const [firstCargo] = await prisma.cargo.findMany({
+  //     where: { truckId: truck.id },
+  //     take: 1,
+  //   });
+  //   if (firstCargo) {
+  //     await prisma.cargoPhoto.createMany({
+  //       data: [
+  //         {
+  //           url: `http://example.com/images/${firstCargo.cargoNumber}-1.jpg`,
+  //           cargoId: firstCargo.id,
+  //         },
+  //         {
+  //           url: `http://example.com/images/${firstCargo.cargoNumber}-2.jpg`,
+  //           cargoId: firstCargo.id,
+  //         },
+  //       ],
+  //     });
+  //   }
+  // }
+
+  console.log('✅ Добавлены фото (пример кода закомментирован)');
 
   // Добавляем пользователя Суперадмина
   const hashedPassword = await bcrypt.hash('123456', 10);

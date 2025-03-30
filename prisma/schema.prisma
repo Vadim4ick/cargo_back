@@ -31,18 +31,24 @@ enum Role {
 }
 
 model Cargo {
-  id                 String   @id @default(uuid())
-  cargoNumber        String   @unique
-  date               DateTime
+  id String @id @default(uuid())
+
+  cargoNumber        String  @unique
+  date               String
+  loadUnloadDate     String
+  driver             String
   transportationInfo String
   payoutAmount       Decimal
+  payoutDate         String
+  paymentStatus      String?
   payoutTerms        String
-  createdAt          DateTime @default(now())
+
+  createdAt DateTime @default(now())
 
   truckId String
   truck   Truck  @relation(fields: [truckId], references: [id])
 
-  cargoPhoto CargoPhoto?
+  cargoPhotos CargoPhoto[]
 }
 
 model Truck {
@@ -54,8 +60,8 @@ model Truck {
 
 model CargoPhoto {
   id        String   @id @default(uuid())
-  url       String   @unique // URL изображения
+  url       String
+  cargoId   String
   cargo     Cargo    @relation(fields: [cargoId], references: [id], onDelete: Cascade)
-  cargoId   String   @unique
   createdAt DateTime @default(now())
 }

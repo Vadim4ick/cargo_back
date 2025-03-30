@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCargoDto } from './dto/create-cargo.dto';
 import { UpdateCargoDto } from './dto/update-cargo.dto';
 import { PrismaService } from 'src/prisma.service';
-import * as path from 'path';
+// import * as path from 'path';
 
 @Injectable()
 export class CargoService {
@@ -10,75 +10,76 @@ export class CargoService {
 
   async create(
     createCargoDto: CreateCargoDto,
-    cargoPhoto?: Express.Multer.File,
+    // cargoPhoto?: Express.Multer.File,
   ) {
-    let photoUrl: string | null = null;
+    // let photoUrl: string | null = null;
 
-    if (cargoPhoto) {
-      photoUrl = path.join('images', cargoPhoto.filename); // Формируем путь
-    }
+    // if (cargoPhoto) {
+    //   photoUrl = path.join('images', cargoPhoto.filename); // Формируем путь
+    // }
 
     return this.prisma.cargo.create({
       data: {
         ...createCargoDto,
-        cargoPhoto: photoUrl ? { create: { url: photoUrl } } : undefined, // Создаем запись фото
+
+        // cargoPhoto: photoUrl ? { create: { url: photoUrl } } : undefined, // Создаем запись фото
       },
-      include: { truck: true, cargoPhoto: true },
+      include: { truck: true, cargoPhotos: true },
     });
   }
 
   findAll() {
     return this.prisma.cargo.findMany({
-      include: { cargoPhoto: true },
+      include: { cargoPhotos: true },
     });
   }
 
   async update(
     id: string,
     updateCargoDto: UpdateCargoDto,
-    cargoPhoto?: Express.Multer.File,
+    // cargoPhoto?: Express.Multer.File,
   ) {
     const cargo = await this.prisma.cargo.findUnique({
       where: { id },
-      include: { cargoPhoto: true },
+      include: { cargoPhotos: true },
     });
 
     if (!cargo) {
       throw new NotFoundException('Груз не найден');
     }
 
-    let photoUrl: string | null = cargo.cargoPhoto?.url || null;
+    // let photoUrl: string | null = cargo.cargoPhoto?.url || null;
 
-    if (cargoPhoto) {
-      photoUrl = path.join('images', cargoPhoto.filename); // Формируем новый путь
+    // if (cargoPhoto) {
+    //   photoUrl = path.join('images', cargoPhoto.filename); // Формируем новый путь
 
-      // Если фото уже было, обновляем, иначе создаем
-      if (cargo.cargoPhoto) {
-        await this.prisma.cargoPhoto.update({
-          where: { cargoId: cargo.id },
-          data: { url: photoUrl },
-        });
-      } else {
-        await this.prisma.cargoPhoto.create({
-          data: { cargoId: cargo.id, url: photoUrl },
-        });
-      }
-    }
+    //   // Если фото уже было, обновляем, иначе создаем
+    //   if (cargo.cargoPhoto) {
+    //     await this.prisma.cargoPhoto.update({
+    //       where: { cargoId: cargo.id },
+    //       data: { url: photoUrl },
+    //     });
+    //   } else {
+    //     await this.prisma.cargoPhoto.create({
+    //       data: { cargoId: cargo.id, url: photoUrl },
+    //     });
+    //   }
+    // }
 
     return this.prisma.cargo.update({
       where: { id },
       data: {
         ...updateCargoDto,
-        cargoPhoto: photoUrl ? { update: { url: photoUrl } } : undefined, // Обновляем фото
+        // cargoPhotos: photoUrl ? { update: { url: photoUrl } } : undefined, // Обновляем фото
       },
-      include: { cargoPhoto: true },
+      include: { cargoPhotos: true },
     });
   }
 
   async findById({ id }: { id: string }) {
     const cargo = await this.prisma.cargo.findUnique({
       where: { id },
-      include: { cargoPhoto: true },
+      include: { cargoPhotos: true },
     });
 
     if (!cargo) {
