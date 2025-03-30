@@ -33,15 +33,15 @@ enum Role {
 model Cargo {
   id String @id @default(uuid())
 
-  cargoNumber        String  @unique
-  date               String
-  loadUnloadDate     String
+  cargoNumber        String    @unique
+  date               DateTime?
+  loadUnloadDate     DateTime?
   driver             String
   transportationInfo String
-  payoutAmount       Decimal
-  payoutDate         String
+  payoutAmount       Decimal?
+  payoutDate         DateTime?
   paymentStatus      String?
-  payoutTerms        String
+  payoutTerms        String?
 
   createdAt DateTime @default(now())
 

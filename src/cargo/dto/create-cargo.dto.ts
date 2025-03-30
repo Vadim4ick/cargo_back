@@ -29,7 +29,7 @@ export class CreateCargoDto {
   createdAt?: string;
 
   @IsNotEmpty({ message: 'Дата заявки не может быть пустой' })
-  // @IsDateString({}, { message: 'Неверный формат даты заявки' })
+  @IsDateString({}, { message: 'Неверный формат даты заявки' })
   @ApiProperty({
     example: '2024-03-12T00:00:00.000Z',
     description: 'Дата заявки (date)',
@@ -45,7 +45,7 @@ export class CreateCargoDto {
   cargoNumber: string;
 
   @IsNotEmpty({ message: 'Дата загрузки/выгрузки не может быть пустой' })
-  // @IsDateString({}, { message: 'Неверный формат даты загрузки/выгрузки' })
+  @IsDateString({}, { message: 'Неверный формат даты загрузки/выгрузки' })
   @ApiProperty({
     example: '2024-03-15T08:00:00.000Z',
     description: 'Дата загрузки/выгрузки (loadUnloadDate)',
@@ -78,7 +78,7 @@ export class CreateCargoDto {
   payoutAmount: number;
 
   @IsNotEmpty({ message: 'Дата оплаты не может быть пустой' })
-  // @IsDateString({}, { message: 'Неверный формат даты оплаты' })
+  @IsDateString({}, { message: 'Неверный формат даты оплаты' })
   @ApiProperty({
     example: '2024-03-20T00:00:00.000Z',
     description: 'Дата оплаты (payoutDate)',

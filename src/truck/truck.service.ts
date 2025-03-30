@@ -22,7 +22,7 @@ export class TruckService {
         where: { truckId },
         skip: Number(page) * Number(limit),
         take: Number(limit),
-        orderBy: { createdAt: 'desc' },
+        orderBy: { date: 'desc' },
       }),
     ]);
 
