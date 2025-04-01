@@ -40,7 +40,7 @@ export class InvitationService {
       });
     }
 
-    const inviteLink = `http://localhost:3000/register?token=${token}`;
+    const inviteLink = `${process.env.CLIENT_URI}/register?token=${token}`;
 
     // Отправляем письмо с приглашением
     await this.mailerService.sendInvitation(email, inviteLink);

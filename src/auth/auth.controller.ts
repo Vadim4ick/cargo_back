@@ -179,7 +179,7 @@ export class AuthController {
     @Req() req: ExpressRequest,
     @Res({ passthrough: true }) res: Response,
   ) {
-    res.clearCookie('refresh_token', { domain: 'localhost', path: '/' });
+    res.clearCookie('refresh_token', { domain: '.myakos.ru', path: '/' });
 
     return { message: 'Вы успешно вышли' };
   }
