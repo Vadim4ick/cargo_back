@@ -72,11 +72,20 @@ export class AuthController {
       req.user,
     );
 
+    // res.cookie('refresh_token', refresh_token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production',
+    //   sameSite: 'strict',
+    //   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
+    // });
+
     res.cookie('refresh_token', refresh_token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
+      sameSite: 'lax', // ✅ менее строгая политика
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+      path: '/',
+      domain: '.myakos.ru', // ✅ если нужен доступ на всех поддоменах
     });
 
     return {
