@@ -66,7 +66,6 @@ export class TruckController {
     description: 'Количество элементов на страницу',
   })
   @UseGuards(JwtAuthGuard)
-  @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('access-token')
   @ApiOperation({ summary: 'Получение списка грузов по машине с пагинацией' })
   @ApiResponse({ status: 200, description: 'Успешно' })

@@ -65,6 +65,7 @@ export class CargoDto {
     description: 'Сумма выплат',
   })
   @IsNumber()
+  @IsOptional()
   payoutAmount: number;
 
   @ApiProperty({
@@ -72,6 +73,7 @@ export class CargoDto {
     description: 'Дата оплаты',
   })
   @IsDateString()
+  @IsOptional()
   payoutDate: string;
 
   @ApiProperty({
@@ -80,6 +82,7 @@ export class CargoDto {
       'Статус оплаты (например, "Оплачено", "Ожидается", "Просрочено")',
   })
   @IsString()
+  @IsOptional()
   paymentStatus: string;
 
   // @ApiProperty({

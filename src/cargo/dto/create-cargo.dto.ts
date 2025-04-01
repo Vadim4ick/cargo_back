@@ -75,6 +75,7 @@ export class CreateCargoDto {
     example: 1500,
     description: 'Сумма выплат (payoutAmount)',
   })
+  @IsOptional()
   payoutAmount: number;
 
   @IsNotEmpty({ message: 'Дата оплаты не может быть пустой' })
@@ -83,6 +84,7 @@ export class CreateCargoDto {
     example: '2024-03-20T00:00:00.000Z',
     description: 'Дата оплаты (payoutDate)',
   })
+  @IsOptional()
   payoutDate: string;
 
   @IsNotEmpty({ message: 'Статус оплаты не может быть пустым' })
@@ -91,6 +93,7 @@ export class CreateCargoDto {
     example: 'Оплачено',
     description: 'Статус оплаты (paymentStatus)',
   })
+  @IsOptional()
   paymentStatus: string;
 
   @IsNotEmpty({ message: 'Сроки выплаты не могут быть пустыми' })
@@ -99,6 +102,7 @@ export class CreateCargoDto {
     example: 'Предоплата',
     description: 'Сроки выплаты (payoutTerms)',
   })
+  @IsOptional()
   payoutTerms: string;
 
   @IsNotEmpty({ message: 'ID машины не может быть пустым' })
