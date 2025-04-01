@@ -79,13 +79,13 @@ export class AuthController {
     //   maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
     // });
 
-    console.log(refresh_token);
     res.cookie('refresh_token', refresh_token, {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
       path: '/',
+      domain: '.myakos.ru', // ✅ обязательное условие для работы на поддоменах
     });
 
     return {
