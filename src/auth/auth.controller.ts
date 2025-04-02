@@ -85,7 +85,8 @@ export class AuthController {
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 дней
       path: '/',
-      domain: '.myakos.ru', // ✅ обязательное условие для работы на поддоменах
+      domain:
+        process.env.NODE_ENV === 'production' ? '.myakos.ru' : 'localhost', // ✅ обязательное условие для работы на поддоменах
     });
 
     return {
@@ -179,7 +180,11 @@ export class AuthController {
     @Req() req: ExpressRequest,
     @Res({ passthrough: true }) res: Response,
   ) {
-    res.clearCookie('refresh_token', { domain: '.myakos.ru', path: '/' });
+    res.clearCookie('refresh_token', {
+      domain:
+        process.env.NODE_ENV === 'production' ? '.myakos.ru' : 'localhost',
+      path: '/',
+    });
 
     return { message: 'Вы успешно вышли' };
   }
